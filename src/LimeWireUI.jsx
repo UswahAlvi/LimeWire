@@ -14,6 +14,7 @@ import Pause from './assets/inactive.png'
 import Premium from './assets/premium.png'
 import Explore from './assets/explore.png'
 import Cancel from './assets/cancel.png'
+import Resume from './assets.resume.png'
 // Styled components
 const GridContainer = styled.div`
   display: grid;
@@ -591,6 +592,33 @@ const LimeWireUI = () => {
                 </tbody>
               </Table>
             </TableContainer>
+            </div>
+            <div>
+              <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Cancel} />
+                  <span>Cancel</span>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Resume} />
+                  <span>Resume</span>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Pause} />
+                  <span>Pause</span>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Premium} />
+                  <span>Premium</span>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Explore} />
+                  <span>Explore</span>
+                </div>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                  <img src={Inactive} />
+                  <span>Clear Inactive</span>
+                </div>
+              
             </div>
 
           </MainContent>
