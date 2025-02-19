@@ -14,7 +14,7 @@ import Pause from './assets/inactive.png'
 import Premium from './assets/premium.png'
 import Explore from './assets/explore.png'
 import Cancel from './assets/cancel.png'
-import Resume from './assets.resume.png'
+import Resume from './assets/resume.png'
 // Styled components
 const GridContainer = styled.div`
   display: grid;
@@ -593,29 +593,29 @@ const LimeWireUI = () => {
               </Table>
             </TableContainer>
             </div>
-            <div>
+            <div style={{display:'flex', alignItems:'center', gap: '20px', justifyContent:'center', marginTop:'10px'}}>
               <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Cancel} />
+                  <img src={Cancel} height={30} />
                   <span>Cancel</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Resume} />
+                  <img src={Resume} height={30}/>
                   <span>Resume</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Pause} />
+                  <img src={Pause} height={30}/>
                   <span>Pause</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Premium} />
+                  <img src={Premium} height={30}/>
                   <span>Premium</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Explore} />
+                  <img src={Explore}height={30} />
                   <span>Explore</span>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                  <img src={Inactive} />
+                  <img src={Inactive} height={30} />
                   <span>Clear Inactive</span>
                 </div>
               
