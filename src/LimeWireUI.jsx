@@ -15,6 +15,10 @@ import Premium from './assets/premium.png'
 import Explore from './assets/explore.png'
 import Cancel from './assets/cancel.png'
 import Resume from './assets/resume.png'
+import Search from './assets/searchbar.png'
+import Library from './assets/library.png'
+import Monitor from './assets/monitor.png'
+import { MdMonitor } from "react-icons/md";
 // Styled components
 const GridContainer = styled.div`
   display: grid;
@@ -28,7 +32,7 @@ const GridItem = styled.div`
   align-items: center;
   gap: 5px;
   padding: 6px;
-  background: #dcdcdc;
+  background: #bcbcb8;
   font-size: 12px;
   cursor: pointer;
   border: 1px solid black;
@@ -50,6 +54,7 @@ const Menu = styled.div`
   padding: 0px 20px 5px 20px;
   border-bottom: 1.5px solid black;
   display: flex;
+  font-size: 12px;
   gap: 15px;
 `;
 
@@ -70,10 +75,10 @@ const Button1 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px;
+  padding-inline: 5px;
   cursor: pointer;
+  font-size: 12px;
   background: #d6d5d1;
-  font-size: 14px;
   position: relative;
   border-radius: 6px 6px 0px 0px;
   border-top: 2px solid white;
@@ -93,10 +98,10 @@ const Button2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px;
+  padding-inline: 5px;
   cursor: pointer;
   background: #d6d5d1;
-  font-size: 14px;
+  font-size: 12px;
   border-top: 2px solid white;
   border-radius: 6px 6px 0px 0px;
   border-bottom: none;
@@ -108,10 +113,10 @@ const Button3 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px;
+  padding-inline: 5px;
   cursor: pointer;
   background: #d6d5d1;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 6px 6px 0px 0px;
   border-top: 2px solid white;
   border-bottom: none;
@@ -409,13 +414,13 @@ const LimeWireUI = () => {
           <IconBar>
             <IconContainer>
               <Button1>
-                <FaSearch /> Search
+                <img src={Search} /> Search
               </Button1>
               <Button2>
-                <FaDesktop /> Monitor
+                <img src={Monitor}/> Monitor
               </Button2>
               <Button3>
-                <FaFolder /> Library
+                <img src={Library} /> Library
               </Button3>
             </IconContainer>
             <div style={{ display: "flex", alignItems: "center" }}>
