@@ -1,25 +1,32 @@
-import { useState } from "react";
-import styled from "styled-components";
-import Logo from "./assets/logo.png";
+
+import { useState, useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
+import Logo from "/logo.png";
 import { IoCloseSharp } from "react-icons/io5";
-import { FaSearch, FaDesktop, FaFolder, FaSortUp, FaSortDown } from "react-icons/fa";
+import { FaSortUp, FaSortDown } from "react-icons/fa";
 import { FaMusic, FaImages, FaFileAlt, FaVideo, FaFolderOpen } from "react-icons/fa";
 import { IoMdCheckboxOutline } from "react-icons/io";
-import Junk from './assets/junk.png'
-import Arrow from './assets/downarrow.png'
-import Browse from './assets/browsehost.png'
-import Stop from './assets/stopsearch.png'
-import Inactive from './assets/inactive.png'
-import Pause from './assets/inactive.png'
-import Premium from './assets/premium.png'
-import Explore from './assets/explore.png'
-import Cancel from './assets/cancel.png'
-import Resume from './assets/resume.png'
-import Search from './assets/searchbar.png'
-import Library from './assets/library.png'
-import Monitor from './assets/monitor.png'
-import { MdMonitor } from "react-icons/md";
-// Styled components
+import Junk from '/junk.png'
+import Arrow from '/downarrow.png'
+import Browse from '/browsehost.png'
+import Stop from '/stopsearch.png'
+import Inactive from '/inactive.png'
+import Pause from '/pause.png'
+import Premium from '/premium.png'
+import Explore from '/explore.png'
+import Cancel from '/cancel.png'
+import Resume from '/resume.png'
+import Search from '/searchbar.png'
+import Library from '/library.png'
+import Monitor from '/monitor.png'
+import Connect from '/connection.png'
+import World from '/world.png'
+import Prev from '/prev.png'
+import Next from '/next.png'
+import PauseButton from '/pauseButton.png'
+import StopButton from '/stop.png'
+import Play from '/play.png'
+
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -153,14 +160,16 @@ const MainContent = styled.div`
 `;
 
 const Footer = styled.div`
-  background: #333;
-  color: white;
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  font-size: 14px;
+  align-items:center;
+  background: #d6d5d1;
+  border-top: 1px solid black;
+  
 `;
-
+const Vertical=styled.hr`
+  transform: rotate(90deg);
+  width: 100%
+`;
 const Span = styled.span`
   padding: 1px;
   font-size: 11px;
@@ -185,7 +194,7 @@ const SearchTypeTitle = styled.span`
 
 const FormContainer = styled.div`
   background: #d6d5d1;
-  border: 2px solid black;
+  border: 1.5px solid black;
   margin-top: 8px;
 `;
 
@@ -309,7 +318,22 @@ const CloseButton = styled.div`
     background: #bbbbbb;
   }
 `;
+const wipeAnimation = keyframes`
+  0% { clip-path: inset(0 0 100% 0); opacity: 1; }  /* Fully hidden */
+  50% { clip-path: inset(0 0 0 0); opacity: 1; }    /* Fully visible */
+  100% { clip-path: inset(0 0 100% 0); opacity: 1; } /* Hidden again */
+`;
+const Icon = styled.img.attrs({ src: Arrow, alt: "down Icon" })`
+  height: 22px;
+  cursor: pointer;
+  transition: clip-path 0.3s ease-in-out;
 
+   ${({ $isDownloading }) =>
+    $isDownloading &&
+    css`
+      animation: ${wipeAnimation} 1s ease-in-out infinite;
+    `}
+`;
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -340,7 +364,7 @@ const ThName = styled.th`
 const Td = styled.td`
   padding: 2px;
   border: 1px solid #ccc;
-  background: #f4f7f0;
+  background: ${({ $isSelected }) => ($isSelected ? '#c8f07e' : '#f4f7f0')};
   text-align: center;
 `;
 
@@ -355,48 +379,101 @@ const StarRating = styled.span`
 `;
 
 const LimeWireUI = () => {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null)
   const data = [
-    { quality: "⭐⭐⭐⭐⭐", number: 37, name: "Soundgarden: Outshined", type: "mp3", size: "4,852 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐⭐", number: 33, name: "Soundgarden: Black Hole Sun", type: "mp3", size: "4,098 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
-    { quality: "⭐⭐⭐⭐", number: 24, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐⭐", number: 1, name: "You know I love you", type: "mp3", size: "3,172 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐⭐", number: 3, name: "Soundgarden: Outshined", type: "mp3", size: "4,852 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 2, name: "Soundgarden: Black Hole Sun", type: "mp3", size: "4,098 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 4, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 23, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 11, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 13, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐", number: 15, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 16, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 21, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 17, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐", number: 18, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
   
   ];
-  const downloads = [
+  const [downloads, setDownloads] = useState([
     {
       name: "Soundgarden - Outshined.mp3",
       size: "4,852 KB",
-      status: "Downloading from 8 hosts",
-      progress: 78,
-      speed: "213 KB/s",
-      time: "0:04"
+      status: "Complete",
+      progress: 100,
+      speed: "0 KB/s",
+      time: "0:00"
     },
     {
       name: "Soundgarden - The Day I Tried To Live.mp3",
       size: "7,487 KB",
-      status: "Downloading from 2 hosts",
-      progress: 19,
-      speed: "36 KB/s",
-      time: "2:50"
-    },
-    {
-      name: "Soundgarden - Black Hole Sun.mp3",
-      size: "4,968 KB",
       status: "Complete",
       progress: 100,
       speed: "0 KB/s",
       time: "0:00"
     }
-  ];
+  ]);
+
+  const handleRowClick = (index) => {
+    setSelectedSong(index === selectedSong ? null : index);
+  };
+
+  const handleOutsideClick = (e) => {
+    const table = document.getElementById("songs-table");
+    if (table && !table.contains(e.target)) {
+      setSelectedSong(null);
+    }
+  };
+  const startDownload = () => {
+    console.log(selectedSong)
+    if (selectedSong === null) {
+      alert("No song selected");
+      return;
+    }
+  
+    if (selectedSong !== 0 ) {
+      alert("Selected song not available to download");
+      return;
+    }
+  
+    setIsDownloading(true);
+    handleDownload(); 
+  
+    // Reset animation after a short delay
+    setTimeout(() => {
+      setIsDownloading(false);
+    }, 3000);
+  };
+  
+  const handleDownload=()=>{
+    const newDownload = {
+      name: "You know I love you.mp3",
+      size: "3,170 KB",
+      status: "Complete",
+      progress: 100,
+      speed: "0 KB/s",
+      time: "0:00"
+    };
+
+    setDownloads((prevDownloads) => [...prevDownloads, newDownload]);
+    const fileId = "1tHl-vQd2OCw0naB4gdvXbRBRWHYx46wI";
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = "audio.mp3"; // Custom file name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
 
   return (
     <Div>
@@ -527,24 +604,24 @@ const LimeWireUI = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
-                    <tr key={index}>
-                      <Td><StarRating>{item.quality}</StarRating></Td>
-                      <Td>{item.number}</Td>
-                      <Td>{item.name}</Td>
-                      <Td>{item.type}</Td>
-                      <Td>{item.size}</Td>
-                      <Td>{item.speed}</Td>
-                      <Td>{item.bitrate}</Td>
-                      <Td>?</Td>
-                    </tr>
-                  ))}
-                </tbody>
+                {data.map((item, index) => (
+                  <tr key={index} onClick={() => handleRowClick(index)}>
+                    <Td $isSelected={index === selectedSong}><StarRating>{item.quality}</StarRating></Td>
+                    <Td $isSelected={index === selectedSong}>{item.number}</Td>
+                    <Td $isSelected={index === selectedSong}>{item.name}</Td>
+                    <Td $isSelected={index === selectedSong}>{item.type}</Td>
+                    <Td $isSelected={index === selectedSong}>{item.size}</Td>
+                    <Td $isSelected={index === selectedSong}>{item.speed}</Td>
+                    <Td $isSelected={index === selectedSong}>{item.bitrate}</Td>
+                    <Td $isSelected={index === selectedSong}>?</Td>
+                  </tr>
+                ))}
+              </tbody>
               </Table>
             </TableContainer>
             <div style={{display:'flex', paddingBlock:'8px'}}>
               <div style={{display:'flex', gap: '15px' , alignItems: 'center'}}>  
-                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '130px'}}>
+                <div onClick={startDownload} style={{role:'button', cursor:'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '130px'}}>
                   <img src={Arrow} />
                   <span>Download</span>
                 </div>
@@ -630,7 +707,34 @@ const LimeWireUI = () => {
         </div>
 
         <Footer>
-          
+          <div style={{display:'flex', alignItems:'center', borderRight: '1px solid black', paddingRight:'10px'}}>
+            <img src={Connect} />
+            <span style={{whiteSpace:'nowrap'}}>Turbo Charged Connection</span>
+          </div>
+          <div  style={{display:'flex', borderRight: '1px solid black'}} >
+            <img src={World} width={24}/>
+          </div>
+          <div  style={{display:'flex', borderRight: '1px solid black'}} >
+            <div style={{borderRadius:'16px',color: 'white', border: '1px solid black', background:'green', paddingInline:'8px', fontWeight:'normal', margin:'1px 4px'}}>
+              0
+            </div>
+          </div>
+          <Icon $isDownloading={isDownloading}/>
+          <span>0 @ 0kbps</span>
+          <img src={Arrow} height={20} style={{transform:'rotate(180deg)'}}/>
+          <span style={{borderRight: '1px solid black', paddingRight:'6px'}}>0 @ 0kbps</span>
+          <u><a style={{color: 'red', paddingInline:'8px',borderRight: '1px solid black'}} href="/">a newer version is available, update?</a></u>
+          <div style={{display: 'flex', alignItems:'center', paddingInline:'3px'}}>
+            <img src={Prev} height={16}/>
+            <img src={Play} height={16}/>
+            <img src={PauseButton} height={16} />
+            <img src={StopButton} height={16} />
+            <img src={Next} height={16}/>
+          </div>
+          <div style={{border: '1px solid black', padding:'2px 4px'}}>
+            LimeWire Media Player
+          </div>
+
         </Footer>
       </Container>
     </Div>
