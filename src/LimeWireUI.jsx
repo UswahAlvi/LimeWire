@@ -166,10 +166,7 @@ const Footer = styled.div`
   border-top: 1px solid black;
   
 `;
-const Vertical=styled.hr`
-  transform: rotate(90deg);
-  width: 100%
-`;
+
 const Span = styled.span`
   padding: 1px;
   font-size: 11px;
@@ -367,11 +364,33 @@ const Td = styled.td`
   background: ${({ $isSelected }) => ($isSelected ? '#c8f07e' : '#f4f7f0')};
   text-align: center;
 `;
-
 const TableContainer = styled.div`
   width: 100%;
-  overflow-x: auto;
   font-size: 9px;
+  border: 1px solid grey;
+  overflow-y: auto;  /* Enables vertical scrolling */
+  overflow-x: hidden;
+  height: ${({ height }) => (typeof height === "number" ? `${height}px` : height || "300px")};
+`;
+const ProgressBar = styled.div`
+  height: 12px;
+  background-color: #d6d5d1;
+  color: black;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-size: 10px;
+  color: white;
+  font-weight: bold;
+`;
+
+const ProgressFill = styled.div`
+  position: absolute;
+  height: 100%;
+  width: ${(props) => props.$progress}%;
+  background-color: #81b648;
+  transition: width 0.3s ease-in-out;
 `;
 
 const StarRating = styled.span`
@@ -381,8 +400,10 @@ const StarRating = styled.span`
 const LimeWireUI = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null)
+  const [songInput, setSongInput] =useState('Spoonman');
+  const [selectedSearchType, setSelectedSearchType]=useState('Audio')
   const data = [
-    { quality: "⭐⭐⭐⭐⭐", number: 1, name: "You know I love you", type: "mp3", size: "3,172 KB", speed: "T3 or Higher", bitrate: 128 },
+    { quality: "⭐⭐⭐⭐⭐", number: 1, name: "You know I love you",file: '1tHl-vQd2OCw0naB4gdvXbRBRWHYx46wI' ,type: "mp3", size: "3,172 KB", speed: "T3 or Higher", bitrate: 128 },
     { quality: "⭐⭐⭐⭐⭐", number: 3, name: "Soundgarden: Outshined", type: "mp3", size: "4,852 KB", speed: "T3 or Higher", bitrate: 128 },
     { quality: "⭐⭐⭐⭐", number: 2, name: "Soundgarden: Black Hole Sun", type: "mp3", size: "4,098 KB", speed: "T3 or Higher", bitrate: 128 },
     { quality: "⭐⭐⭐⭐", number: 4, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
@@ -396,28 +417,59 @@ const LimeWireUI = () => {
     { quality: "⭐⭐⭐⭐", number: 18, name: "Soundgarden: Spoonman", type: "mp3", size: "3,064 KB", speed: "T3 or Higher", bitrate: 128 },
   
   ];
+
+  const [searchResult, setSearchResult] = useState(()=>{
+    const query = songInput.trim().toLowerCase();
+    if (!query) {
+      setSearchResult([]); 
+      return;
+    }
+  
+    return data.filter((song) =>
+      song.name.toLowerCase().includes(query)
+    );
+  
+  })
+
   const [downloads, setDownloads] = useState([
     {
       name: "Soundgarden - Outshined.mp3",
       size: "4,852 KB",
-      status: "Complete",
+      status: "Completed",
       progress: 100,
-      speed: "0 KB/s",
-      time: "0:00"
+      speed:0,
+      timeMin: 0,
+      timeSecond: 0
     },
     {
       name: "Soundgarden - The Day I Tried To Live.mp3",
       size: "7,487 KB",
-      status: "Complete",
+      status: "Completed",
       progress: 100,
-      speed: "0 KB/s",
-      time: "0:00"
+      speed: 0,
+      timeMin: 0,
+      timeSecond: 0
     }
   ]);
-
-  const handleRowClick = (index) => {
-    setSelectedSong(index === selectedSong ? null : index);
+  const handleSearch = () => {
+    const query = songInput.trim().toLowerCase();
+    if (!query) {
+      setSearchResult([]); 
+      return;
+    }
+  
+    const filteredSongs = data.filter((song) =>
+      song.name.toLowerCase().includes(query)
+    );
+  
+    setSearchResult(filteredSongs);
   };
+  
+ 
+  const handleRowClick = (song) => { 
+    setSelectedSong(song === selectedSong ? null : song);
+  };
+  
 
   const handleOutsideClick = (e) => {
     const table = document.getElementById("songs-table");
@@ -432,7 +484,7 @@ const LimeWireUI = () => {
       return;
     }
   
-    if (selectedSong !== 0 ) {
+    if (!selectedSong.file) {
       alert("Selected song not available to download");
       return;
     }
@@ -445,28 +497,93 @@ const LimeWireUI = () => {
       setIsDownloading(false);
     }, 3000);
   };
+  const handleSongInput=(e)=>{
+    setSongInput(e.target.value)
+    console.log(songInput)
+  }
   
-  const handleDownload=()=>{
+
+  const handleDownload = () => {
+    if (!selectedSong) return;
+
+    const fileId = selectedSong.file;
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    const downloadId = Date.now(); // Generate a unique ID for each download
+
+    // Add new download entry with initial state
     const newDownload = {
-      name: "You know I love you.mp3",
-      size: "3,170 KB",
-      status: "Complete",
-      progress: 100,
-      speed: "0 KB/s",
-      time: "0:00"
+        id: downloadId, // Unique ID for tracking
+        ...selectedSong,
+        progress: 0,
+        speed: 0,
+        timeMin: 0,
+        timeSecond: 0,
+        status: "Starting",
     };
 
     setDownloads((prevDownloads) => [...prevDownloads, newDownload]);
-    const fileId = "1tHl-vQd2OCw0naB4gdvXbRBRWHYx46wI";
-    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
+    setTimeout(() => {
+        setDownloads((prev) =>
+            prev.map((d) =>
+                d.id === downloadId ? { ...d, status: "Downloading" } : d
+            )
+        );
+    }, 300); // Faster status update
+
+    // Simulate download progress
+    const fileSizeKB = parseInt(selectedSong.size.replace(/,/g, ""), 10); // Convert size to KB
+    const fakeDownloadSpeed = 1000; // Increased speed to 1000 KB/s
+    const totalTime = (fileSizeKB / fakeDownloadSpeed) * 1000; // Adjusted total time in ms
+
+    let startTime = Date.now();
+    let progress = 0;
+
+    const updateInterval = setInterval(() => {
+        const elapsedTime = Date.now() - startTime;
+        progress = Math.floor((elapsedTime / totalTime) * 100); // Ensure integer progress
+
+        const remainingTime = Math.max(totalTime - elapsedTime, 0);
+        const remainingMinutes = Math.floor(remainingTime / 60000);
+        const remainingSeconds = Math.floor((remainingTime % 60000) / 1000);
+
+        setDownloads((prev) =>
+            prev.map((d) =>
+                d.id === downloadId
+                    ? {
+                          ...d,
+                          progress: Math.min(progress, 100),
+                          speed: fakeDownloadSpeed,
+                          timeMin: remainingMinutes,
+                          timeSecond: remainingSeconds,
+                      }
+                    : d
+            )
+        );
+
+        if (progress >= 100) {
+            clearInterval(updateInterval);
+            setDownloads((prev) =>
+                prev.map((d) =>
+                    d.id === downloadId
+                        ? { ...d, status: "Completed", speed: 0, progress: 100 }
+                        : d
+                )
+            );
+            setSelectedSong(null)
+        }
+    }, 500); // Update every 500ms for faster progress
+
+    // Trigger direct download
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = "audio.mp3"; // Custom file name
+    link.download = `${selectedSong.name}.mp3`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+
+};
+
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -512,27 +629,27 @@ const LimeWireUI = () => {
             <SearchType>
               <SearchTypeTitle>Select Search Type:</SearchTypeTitle>
               <GridContainer>
-                <GridItem>
+                <GridItem className={selectedSearchType === 'All Types' ? 'active' : ''}>
                   <IoMdCheckboxOutline color="green" />
                   All Types
                 </GridItem>
-                <GridItem className="active">
+                <GridItem className={selectedSearchType === 'Audio' ? 'active' : ''}>
                   <FaMusic color="black" />
                   Audio
                 </GridItem>
-                <GridItem>
+                <GridItem className={selectedSearchType === 'Images' ? 'active' : ''}>
                   <FaImages color="green" />
                   Images
                 </GridItem>
-                <GridItem>
+                <GridItem className={selectedSearchType === 'Video' ? 'active' : ''}>
                   <FaVideo color="brown" />
                   Video
                 </GridItem>
-                <GridItem>
+                <GridItem className={selectedSearchType === 'Documents' ? 'active' : ''}>
                   <FaFileAlt color="gray" />
                   Documents
                 </GridItem>
-                <GridItem>
+                <GridItem className={selectedSearchType === 'Programs' ? 'active' : ''}>
                   <FaFolderOpen color="blue" />
                   Programs
                 </GridItem>
@@ -542,7 +659,7 @@ const LimeWireUI = () => {
               <Upper>
                 <Title>Audio</Title>
                 <Label>Title</Label>
-                <Input type="text" defaultValue="spoonman" />
+                <Input type="text" value={songInput} onChange={(e)=>handleSongInput(e)}/>
                 <Label>Artist</Label>
                 <Input type="text" defaultValue="soundgarden" />
                 <Label>Album</Label>
@@ -563,7 +680,7 @@ const LimeWireUI = () => {
                   <Checkbox type="checkbox" />
                   <span>More Search Options</span>
                 </CheckboxContainer>
-                <Button>Search</Button>
+                <Button onClick={handleSearch}>Search</Button>
               </Bottom>
             </FormContainer>
             <div style={{display:'flex', flexDirection:'column'}}>
@@ -589,7 +706,7 @@ const LimeWireUI = () => {
               </CloseButton>
               <Span>soundgarden(23)</Span>
             </TabContainer>
-            <TableContainer>
+            <TableContainer height={300}>
               <Table>
                 <thead>
                   <tr>
@@ -604,22 +721,22 @@ const LimeWireUI = () => {
                   </tr>
                 </thead>
                 <tbody>
-                {data.map((item, index) => (
-                  <tr key={index} onClick={() => handleRowClick(index)}>
-                    <Td $isSelected={index === selectedSong}><StarRating>{item.quality}</StarRating></Td>
-                    <Td $isSelected={index === selectedSong}>{item.number}</Td>
-                    <Td $isSelected={index === selectedSong}>{item.name}</Td>
-                    <Td $isSelected={index === selectedSong}>{item.type}</Td>
-                    <Td $isSelected={index === selectedSong}>{item.size}</Td>
-                    <Td $isSelected={index === selectedSong}>{item.speed}</Td>
-                    <Td $isSelected={index === selectedSong}>{item.bitrate}</Td>
-                    <Td $isSelected={index === selectedSong}>?</Td>
+                {searchResult.map((item, index) => (
+                  <tr key={index} onClick={() => {handleRowClick(item)}}>
+                    <Td $isSelected={item===selectedSong}><StarRating>{item.quality}</StarRating></Td>
+                    <Td $isSelected={item===selectedSong}>{item.number}</Td>
+                    <Td $isSelected={item===selectedSong}>{item.name}</Td>
+                    <Td $isSelected={item===selectedSong}>{item.type}</Td>
+                    <Td $isSelected={item===selectedSong}>{item.size}</Td>
+                    <Td $isSelected={item===selectedSong}>{item.speed}</Td>
+                    <Td $isSelected={item===selectedSong}>{item.bitrate}</Td>
+                    <Td $isSelected={item===selectedSong}>?</Td>
                   </tr>
                 ))}
               </tbody>
               </Table>
             </TableContainer>
-            <div style={{display:'flex', paddingBlock:'8px'}}>
+            <div style={{display:'flex', paddingBlock:'4px'}}>
               <div style={{display:'flex', gap: '15px' , alignItems: 'center'}}>  
                 <div onClick={startDownload} style={{role:'button', cursor:'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '130px'}}>
                   <img src={Arrow} />
@@ -648,7 +765,7 @@ const LimeWireUI = () => {
             <hr style={{margin:'0px'}} />
             <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
               <div>Downloads</div>
-              <TableContainer>
+              <TableContainer height={80}>
               <Table>
                 <thead>
                   <tr>
@@ -666,9 +783,15 @@ const LimeWireUI = () => {
                       <Td>{item.name}</Td>
                       <Td>{item.size}</Td>
                       <Td>{item.status}</Td>
-                      <Td>{item.progress}</Td>
-                      <Td>{item.speed}</Td>
-                      <Td>{item.time}</Td>
+                      <Td>
+                        <ProgressBar>
+                          <ProgressFill $progress={item.progress} />
+                          <span style={{ position: "relative", zIndex: 1, color: 'black' }}>{item.progress}%</span>
+                        </ProgressBar>
+
+                      </Td>
+                      <Td>{item.speed} KB/s</Td>
+                      <Td>{item.timeMin}:{item.timeSecond}</Td>
                     </tr>
                   ))}
                 </tbody>
