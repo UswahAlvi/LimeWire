@@ -730,6 +730,7 @@ const LimeWireUI = () => {
               <Dropdown title="Navigation" items={DropDownItemsNavigation} />
               <Dropdown title="Tools" items={DropDownItemsTools} />
               <Dropdown title="Help" items={DropDownItemsResources} />
+              <ButtonLogin  onClick={()=>navigate('/upload')}>Upload</ButtonLogin>
             </Cont>
               <ButtonLogin  onClick={()=>navigate('/login')}>Login</ButtonLogin>
           </Menu>
