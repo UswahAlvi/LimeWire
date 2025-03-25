@@ -16,7 +16,6 @@ const SubContainer = styled.div`
   color: black;
   position: relative;
   width: 800px;
-  height:43%;
   max-width: 90%;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
@@ -57,56 +56,11 @@ const Header = styled.div`
 const Body= styled.div`
     background-color: #fae6a8;
     margin: 10px;
-    height: 82%;
     padding:10px;
     display: flex;
     box-sizing: border-box;
     gap: 10px;
     font-size: 13px;
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 20%;
-  height: 90%;
-  background-color: white;
-  border: 1.5px solid #a8935a;
-  font-size: 13px;
-  padding-left: 4px;
-  overflow-y: auto;
-  scrollbar-color: #f7c948 #fceabb; /* Scrollbar thumb and track colors */
-
-  .not-extendable {
-    padding-left: 20px;
-  }
-
-  /* Custom Scrollbar for WebKit Browsers */
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #f9d976, #f7c948);
-    border-radius: 8px;
-    border: 2px solid #e8b647;
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(255, 230, 150, 0.8) 0px,
-      rgba(255, 200, 100, 0.8) 5px,
-      transparent 10px
-    );
-  }
-
-  &::-webkit-scrollbar-track {
-    background: linear-gradient(to bottom, #fceabb, #f8b500);
-    border-radius: 10px;
-    border: 1px solid #d8a200;
-  }
-
-  &::-webkit-scrollbar-button {
-    display: none; /* Hides the scrollbar buttons */
-  }
 `;
 
 const TopContentContainer = styled.div`
@@ -128,17 +82,16 @@ const Top = styled. div`
   flex-direction: column;
   padding: 10px;
   font-size: 13px;
+  align-items: center;
 `;
 const BottomButtonsContainer = styled.div`
-display: flex;
-justify-content: flex-end;
-position: absolute;
-bottom: 3%;
-right: 3%;
-gap: 5px;
-position: absolute;
-margin-block: ${(props) => `${props.mb}px`};
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
 `;
+const ForgotPasswordContainer = styled.div`
+  display: flex;
+`
 const BottomButton = styled.div`
   display: flex;
   justify-content: center;
@@ -168,6 +121,9 @@ const Input = styled.input`
   flex: 1;
   padding: 6px;
 `;
+const A = styled.a`
+  cursor: pointer;
+`;
 export default function LoginComponent() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -183,7 +139,7 @@ export default function LoginComponent() {
                 <MainContent>
                     <TopContentContainer>
                         <TopTitle>Login</TopTitle>
-                        <TopContent>
+                          <Top>
                             <InputWrap>
                                 <span>
                                     Username:
@@ -196,9 +152,13 @@ export default function LoginComponent() {
                                 </span>
                                 <Input type='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
                             </InputWrap>
-                        </TopContent>
+                            <ForgotPasswordContainer>
+                            <span>Don't remember password? </span>
+                            <A>Click here</A>
+                            </ForgotPasswordContainer>
+                            </Top>
                     </TopContentContainer>
-                    <BottomButtonsContainer mb={10}>
+                    <BottomButtonsContainer>
                                 <BottomButton disabled={username==="" || password===""}>
                                     OK
                                 </BottomButton>

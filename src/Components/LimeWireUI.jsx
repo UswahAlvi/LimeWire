@@ -44,6 +44,7 @@ import ProgramFormContainer from "./ProgramFormContainer";
 import AllTypesFormContainer from "./AllTypesFormContainer";
 import ImagesFormContainer from "./ImagesFormContainer";
 import DocumentsFormContainer from "./DocumentsFormContainer";
+import { useNavigate } from "react-router-dom";
 
 const GridContainer = styled.div`
   display: grid;
@@ -114,7 +115,12 @@ const Cont = styled.div`
 `;
 const ButtonLogin = styled.button`
   all: unset;
-  padding-right: 10px;
+  margin-right: 10px;
+  padding-inline:4px;
+  &:hover{
+  background: #f3d284;
+  border: 1.5px solid #a8935a;
+  }
 `;
 const IconContainer = styled.div`
   display: flex;
@@ -516,6 +522,7 @@ const LimeWireUI = () => {
   const [activeRow, setActiveRow] = useState(reduxActiveRow);
   const [sidebar, setSidebar] = useState(true)
   const dispatch = useDispatch()
+  const navigate=useNavigate();
   
   const [isOpen, setIsOpen] = useState(false)
   const handleOptions = () => setIsOpen(true)
@@ -724,7 +731,7 @@ const LimeWireUI = () => {
               <Dropdown title="Tools" items={DropDownItemsTools} />
               <Dropdown title="Help" items={DropDownItemsResources} />
             </Cont>
-              <ButtonLogin >Login</ButtonLogin>
+              <ButtonLogin  onClick={()=>navigate('/login')}>Login</ButtonLogin>
           </Menu>
           <IconBar>
           <IconContainer>

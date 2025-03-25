@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import LandingPage from './Pages/landingPage';
 import Login from './Pages/Login';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdminPanel from './Pages/AdminPanel';
 function App() {
 
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/upload" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
   </Provider>
