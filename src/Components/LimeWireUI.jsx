@@ -107,8 +107,15 @@ const Menu = styled.div`
   border-bottom: 1.5px solid #a8935a;
   display: flex;
   font-size: 12px;
+  justify-content: space-between;
 `;
-
+const Cont = styled.div`
+  display: flex;
+`;
+const ButtonLogin = styled.button`
+  all: unset;
+  padding-right: 10px;
+`;
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
@@ -428,7 +435,7 @@ const TableContainer = styled.div`
   border: 1px solid grey;
   overflow-y: auto;  /* Enables vertical scrolling */
   overflow-x: hidden;
-  height: ${({ height }) => (typeof height === "number" ? `${height}px` : height || "240px")};
+  height: ${({ height }) => (typeof height === "number" ? `${height}%` : height || "50%")};
 `;
 const ProgressBar = styled.div`
   height: 12px;
@@ -710,11 +717,14 @@ const LimeWireUI = () => {
       <Container>
         <Navbar>
           <Menu>
-            <Dropdown title="File" items={DropDownItemsFile} />
-            <Dropdown title="View" items={DropDownItemsView} />
-            <Dropdown title="Navigation" items={DropDownItemsNavigation} />
-            <Dropdown title="Tools" items={DropDownItemsTools} />
-            <Dropdown title="Help" items={DropDownItemsResources} />
+            <Cont>
+              <Dropdown title="File" items={DropDownItemsFile} />
+              <Dropdown title="View" items={DropDownItemsView} />
+              <Dropdown title="Navigation" items={DropDownItemsNavigation} />
+              <Dropdown title="Tools" items={DropDownItemsTools} />
+              <Dropdown title="Help" items={DropDownItemsResources} />
+            </Cont>
+              <ButtonLogin >Login</ButtonLogin>
           </Menu>
           <IconBar>
           <IconContainer>
@@ -857,7 +867,7 @@ const LimeWireUI = () => {
             ))}
           </div> 
 
-            <TableContainer height={240}>
+            <TableContainer height={50}>
               <Table>
                 <thead>
                   <tr>
