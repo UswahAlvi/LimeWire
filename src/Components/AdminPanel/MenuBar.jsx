@@ -5,6 +5,7 @@ import Dummy from '/dummyUser.svg'
 import Badge from '/premiumbadge.svg'
 import SearchIcon from '/SearchIcon.svg'
 import Upload from '/uploadMedia.svg'
+import UploadForm from "./UploadForm";
 const Title = styled.div`
     font-size: 38px;
     color: black;
@@ -47,6 +48,7 @@ border-radius: 23px;
 border: 1px solid black;
 padding: 7px 15px;
 margin-left: 10%;
+cursor: pointer;
 `;
 const TopLeftContainer = styled.div`
     display: flex;
@@ -91,6 +93,7 @@ const Div = styled.div`
 export default function MenuBar(){
     const [name, setName] = useState('James Rodriguez')
     const [userType, setUserType] = useState('Premium User')
+    const [isUploadFormOpen,setIsUploadFormOpen] = useState(false)
     return <Container>
         <MenuContainer>
         <Title>LimeWire</Title>
@@ -122,9 +125,11 @@ export default function MenuBar(){
             <img src={SearchIcon} width={30}/>
             Search Albums...
         </SubMenu>
-        <SubMenuUpload>
+        <SubMenuUpload onClick={()=>setIsUploadFormOpen(true)}>
             <img src={Upload} width={20} />
             Upload
+            <UploadForm isOpen={isUploadFormOpen} 
+                        onClose={()=>setIsUploadFormOpen(false)}/>
         </SubMenuUpload>
     </SubMenuContainer>
     </Container>
